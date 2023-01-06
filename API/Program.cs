@@ -14,11 +14,13 @@ namespace API
         {
             var host = CreateHostBuilder(args).Build();
             using var scope = host.Services.CreateScope();
+            //adds the appliactions serivces (dbcontext, logger)
             var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
             var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
             try
             {
+                // pushes updates to the database or creates one if there is none
                 context.Database.Migrate();
                 DbInitializer.Initialize(context);
             }
