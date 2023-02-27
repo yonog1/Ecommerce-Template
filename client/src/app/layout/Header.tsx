@@ -10,7 +10,6 @@ import {
     Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { NavLink } from "react-router-dom";
 
 interface Props {
     darkMode: boolean;
@@ -48,13 +47,7 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
                     }}
                 >
                     <Box display="flex" alignItems="center">
-                        <Typography
-                            variant="h6"
-                            component={NavLink}
-                            to="/"
-                            exact
-                            sx={navStyles}
-                        >
+                        <Typography variant="h6" sx={navStyles}>
                             RE-STORE
                         </Typography>
 
@@ -68,12 +61,7 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
 
                     <List sx={{ display: "flex" }}>
                         {midLinks.map(({ title, path }) => (
-                            <ListItem
-                                component={NavLink}
-                                to={path}
-                                key={path}
-                                sx={navStyles}
-                            >
+                            <ListItem key={path} sx={navStyles}>
                                 {title.toUpperCase()}
                             </ListItem>
                         ))}
@@ -88,12 +76,7 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
 
                         <List sx={{ display: "flex" }}>
                             {rightLinks.map(({ title, path }) => (
-                                <ListItem
-                                    component={NavLink}
-                                    to={path}
-                                    key={path}
-                                    sx={navStyles}
-                                >
+                                <ListItem key={path} sx={navStyles}>
                                     {title.toUpperCase()}
                                 </ListItem>
                             ))}
