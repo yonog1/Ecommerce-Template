@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
             { path: "contact", element: <ContactPage /> },
             { path: "server-error", element: <ServerError /> },
             //{ path: "not-found", element: <NotFound /> },
-            { path: "*", element: <Navigate replace to="/not-found" /> },
+            //{ path: "*", element: <Navigate replace to="/not-found" /> },
         ],
     },
 ]);

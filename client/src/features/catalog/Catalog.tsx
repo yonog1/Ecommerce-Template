@@ -8,6 +8,9 @@ export default function Catalog() {
 
     useEffect(() => {
         agent.Catalog.list().then((products) => setProducts(products));
+        console.log(
+            agent.Catalog.list().then((products) => setProducts(products))
+        );
     }, []);
 
     return (
