@@ -25,7 +25,7 @@ namespace API.Controllers
 
 
         [HttpGet("unauthorized")]
-        public ActionResult GetUnauthorised()
+        public ActionResult GetUnauthorized()
         {
             return Unauthorized();
         }

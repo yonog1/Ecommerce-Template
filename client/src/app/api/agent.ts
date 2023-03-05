@@ -5,7 +5,7 @@ import { router } from "../router/Routes";
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
 
 axios.defaults.baseURL = "http://localhost:5018/api/";
-axios.defaults.withCredentials = true;
+//axios.defaults.withCredentials = true;
 
 const responseBody = (response: AxiosResponse) => response.data;
 
@@ -57,7 +57,7 @@ const Catalog = {
 
 const TestErrors = {
     get400Error: () => requests.get("buggy/bad-request"),
-    get401Error: () => requests.get("buggy/unauthorised"),
+    get401Error: () => requests.get("buggy/unauthorized"),
     get404Error: () => requests.get("buggy/not-found"),
     get500Error: () => requests.get("buggy/server-error"),
     getValidationError: () => requests.get("buggy/validation-error"),
