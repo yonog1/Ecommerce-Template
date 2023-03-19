@@ -5,7 +5,7 @@ import { router } from "../router/Routes";
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
 
 axios.defaults.baseURL = "http://localhost:5018/api/";
-//axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;
 
 const responseBody = (response: AxiosResponse) => response.data;
 
@@ -31,6 +31,9 @@ axios.interceptors.response.use(
                 break;
             case 401:
                 toast.error(data.title);
+                break;
+            case 404:
+                router.navigate("/not-found");
                 break;
             case 500:
                 router.navigate("/server-error", { state: { error: data } });

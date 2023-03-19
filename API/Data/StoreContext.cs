@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using API.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
@@ -15,5 +15,6 @@ namespace API.Data
         }
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
     }
 }

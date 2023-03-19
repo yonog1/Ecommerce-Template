@@ -480,3 +480,6 @@ $RECYCLE.BIN/
 /API/sqlite.db
 /API/sqlite.db-wal
 /API/sqlite.db-shm
+/API/store.db-shm
+/API/store.db-wal
+/API/store.db
