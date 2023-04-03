@@ -1,18 +1,36 @@
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect, useState } from "react";
-import Catalog from "../../features/catalog/Catalog";
 import Header from "./Header";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { Outlet, Route } from "react-router-dom";
-import HomePage from "../../features/home/HomePage";
-import ProductDetails from "../../features/catalog/ProductDetails";
-import AboutPage from "../../features/about/AboutPage";
-import ContactPage from "../../features/contact/ContactPage";
+import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useStoreContext } from "../context/StoreContext";
+import { getCookie } from "../util/util";
+import agent from "../api/agent";
+import LoadingComponent from "./LoadingComponent";
 
 function App() {
+    const { setBasket } = useStoreContext();
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const buyerId = getCookie("buyerId");
+        if (buyerId) {
+            agent.Basket.get()
+                .then((basket) => {
+                    setBasket(basket);
+                })
+                .catch((error) => console.log(error))
+                .finally(() => {
+                    setLoading(false);
+                });
+        } else {
+            setLoading(false);
+        }
+    }, [setBasket]);
+
     const [darkMode, setDarkMode] = useState(false);
     const paletteType = darkMode ? "dark" : "light";
 
@@ -27,6 +45,10 @@ function App() {
 
     function handleThemeChange() {
         setDarkMode(!darkMode);
+    }
+
+    if (loading) {
+        return <LoadingComponent message="Initialising app..." />;
     }
 
     return (
