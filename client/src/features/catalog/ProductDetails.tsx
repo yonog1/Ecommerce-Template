@@ -21,6 +21,12 @@ import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { Product } from "../../app/models/product";
 import { currencyFormat } from "../../app/util/util";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import {
+    addBasketItemAsync,
+    removeBasketItemAsync,
+    setBasket,
+} from "../basket/basketSlice";
 
 export default function ProductDetails() {
     const { id } = useParams<{ id: string }>();
@@ -28,9 +34,10 @@ export default function ProductDetails() {
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState<Boolean>(true);
     const [quantity, setQuantity] = useState(0);
-    const [submitting, setSubmitting] = useState(false);
 
-    const { basket, setBasket, removeItem } = useStoreContext();
+    const { basket, status } = useAppSelector((state) => state.basket);
+    const dispatch = useAppDispatch();
+
     const item = basket?.items.find((i) => i.productId === product?.id);
 
     useEffect(() => {
@@ -51,20 +58,23 @@ export default function ProductDetails() {
     }
 
     function handleUpdateBasket() {
-        setSubmitting(true);
         if (!item || quantity > item.quantity) {
             const updatedQuanity = item ? quantity - item.quantity : quantity;
-            //type safety removed bcus you cant access product details if it doesnt exist
-            agent.Basket.addItem(product?.id!, updatedQuanity)
-                .then((basket) => setBasket(basket))
-                .catch((error) => console.log(error))
-                .finally(() => setSubmitting(false));
+            //type safety removed, if product is null the <NotFound/> will be returned / becuse you cant access product details if it doesnt exist
+            dispatch(
+                addBasketItemAsync({
+                    productId: product?.id!,
+                    quantity: updatedQuanity,
+                })
+            );
         } else {
             const updatedQuanity = item.quantity - quantity;
-            agent.Basket.removeItem(product?.id!, updatedQuanity)
-                .then(() => removeItem(product?.id!, updatedQuanity))
-                .catch((error) => console.log(error))
-                .finally(() => setSubmitting(false));
+            dispatch(
+                removeBasketItemAsync({
+                    productId: product?.id!,
+                    quantity: updatedQuanity,
+                })
+            );
         }
     }
 
@@ -127,10 +137,9 @@ export default function ProductDetails() {
                         <LoadingButton
                             disabled={
                                 item?.quantity === quantity ||
-                                !item ||
-                                quantity === 0
+                                (!item && quantity === 0)
                             }
-                            loading={submitting}
+                            loading={status.includes("pending")}
                             onClick={handleUpdateBasket}
                             sx={{ height: "55px" }}
                             color="primary"

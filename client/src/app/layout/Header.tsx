@@ -1,4 +1,4 @@
-import { ShoppingCart } from "@mui/icons-material";
+import { LightMode, ModeNight, ShoppingCart } from "@mui/icons-material";
 import {
     AppBar,
     Badge,
@@ -11,7 +11,9 @@ import {
     Typography,
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
-import { useStoreContext } from "../context/StoreContext";
+import { useAppSelector } from "../store/configureStore";
+
+//if theme switch ever gets funky, revert to this: <Switch checked={darkMode} onChange={handleThemeChange} />
 
 interface Props {
     darkMode: boolean;
@@ -42,7 +44,7 @@ const navStyles = {
 };
 
 export default function Header({ darkMode, handleThemeChange }: Props) {
-    const { basket } = useStoreContext();
+    const { basket } = useAppSelector((state) => state.basket);
 
     const itemCount = basket?.items.reduce(
         (sum, item) => sum + item.quantity,
@@ -60,7 +62,18 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
             >
                 <Box display="flex" alignItems="center">
                     <Typography variant="h6">RE-STORE</Typography>
-                    <Switch checked={darkMode} onChange={handleThemeChange} />
+
+                    <Box display="flex" alignItems="center">
+                        <Switch
+                            checked={darkMode}
+                            onChange={handleThemeChange}
+                        />
+                        {darkMode ? (
+                            <ModeNight sx={{ color: "yellow" }}></ModeNight>
+                        ) : (
+                            <LightMode sx={{ color: "yellow" }}></LightMode>
+                        )}
+                    </Box>
                 </Box>
                 <List sx={{ display: "flex" }}>
                     {midLinks.map(({ title, path }) => (
