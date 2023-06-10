@@ -10,34 +10,32 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { color } from "@mui/system";
 //import { Container } from "@mui/system";
 //import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import agent from "../../app/api/agent";
-import { useStoreContext } from "../../app/context/StoreContext";
 import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
-import { Product } from "../../app/models/product";
 import { currencyFormat } from "../../app/util/util";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import {
     addBasketItemAsync,
     removeBasketItemAsync,
-    setBasket,
 } from "../basket/basketSlice";
+import { fetchProductAsync, productSelectors } from "./catalogSlice";
 
 export default function ProductDetails() {
     const { id } = useParams<{ id: string }>();
 
-    const [product, setProduct] = useState<Product | null>(null);
-    const [loading, setLoading] = useState<Boolean>(true);
     const [quantity, setQuantity] = useState(0);
+    const { status: productStatus } = useAppSelector((state) => state.catalog);
+
+    const product = useAppSelector((state) =>
+        productSelectors.selectById(state, id!)
+    );
 
     const { basket, status } = useAppSelector((state) => state.basket);
     const dispatch = useAppDispatch();
-
     const item = basket?.items.find((i) => i.productId === product?.id);
 
     useEffect(() => {
@@ -45,12 +43,10 @@ export default function ProductDetails() {
             setQuantity(item.quantity);
         }
         //fetch product details from api (GET) with product ID
-        id &&
-            agent.Catalog.details(parseInt(id))
-                .then((response) => setProduct(response))
-                .catch((error) => console.log(error))
-                .finally(() => setLoading(false));
-    }, [id, item]);
+        if (!product && id) {
+            dispatch(fetchProductAsync(parseInt(id)));
+        }
+    }, [id, item, dispatch, product]);
 
     function handleInputChange(event: any) {
         //updates the number of the quantity text field
@@ -78,7 +74,8 @@ export default function ProductDetails() {
         }
     }
 
-    if (loading) return <LoadingComponent message="Loading Product..." />;
+    if (productStatus.includes("pending"))
+        return <LoadingComponent message="Loading Product..." />;
     if (!product) return <NotFound />;
 
     return (

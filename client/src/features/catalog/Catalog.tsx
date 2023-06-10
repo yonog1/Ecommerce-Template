@@ -13,7 +13,7 @@ export default function Catalog() {
         if (!productsLoaded) {
             dispatch(fetchProductsAsync());
         }
-    }, [productsLoaded]);
+    }, [productsLoaded, dispatch]);
 
     if (status.includes("pending")) {
         return <LoadingComponent message="Loading Catalog..." />;
