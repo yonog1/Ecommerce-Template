@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using API.Extensions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,13 +18,18 @@ namespace API.Controllers
         public ProductsController(StoreContext context)
         {
             _context = context;
-
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts()
+        public async Task<ActionResult<List<Product>>> GetProducts(string orderBy, string searchTerm, string brands, string types)
         {
-            return await _context.Products.ToListAsync();
+            var query = _context.Products
+            .Sort(orderBy)
+            .Search(searchTerm)
+            .Filter(brands, types);
+            //.AsQueryable(); not sure why this was in, 'query' is already of type IQueryable<Product>
+
+            return await query.ToListAsync();
         }
 
         [HttpGet("{id}")]

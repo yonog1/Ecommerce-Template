@@ -1,3 +1,11 @@
 {
-"isGitignoreExtActive": true,
+    "isGitignoreExtActive": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "productsDB",
+            "database": "${workspaceFolder:Ecommerce-Template}/API/store.db"
+        }
+    ]
 }
