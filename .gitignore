@@ -483,3 +483,8 @@ $RECYCLE.BIN/
 /API/store.db-shm
 /API/store.db-wal
 /API/store.db
+/.vscode
+**/.vscode/
+/.vscode/launch.json
+/.vscode/settings.json
+/.vscode/tasks.json
